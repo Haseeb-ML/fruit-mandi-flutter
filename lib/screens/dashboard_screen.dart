@@ -301,71 +301,95 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Positioned.fill(
-                            child: CustomPaint(
-                              painter: _WeeklySalesPainter(
-                                data: initialWeeklySales,
-                                selectedIndex: _selectedDayIdx,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 12,
-                            right: _selectedDayIdx >= 4 ? 28 : null,
-                            left: _selectedDayIdx < 4 ? 28 : null,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.96),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: const Color(0xFFE5E7EB),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          void selectAtDx(double dx) {
+                            final width = constraints.maxWidth;
+                            if (width <= 0) return;
+                            final idx = ((dx / width) *
+                                    (initialWeeklySales.length - 1))
+                                .round()
+                                .clamp(0, initialWeeklySales.length - 1);
+                            if (idx != _selectedDayIdx) {
+                              setState(() => _selectedDayIdx = idx);
+                            }
+                          }
+
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTapDown: (d) => selectAtDx(d.localPosition.dx),
+                            onHorizontalDragUpdate: (d) =>
+                                selectAtDx(d.localPosition.dx),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Positioned.fill(
+                                  child: CustomPaint(
+                                    painter: _WeeklySalesPainter(
+                                      data: initialWeeklySales,
+                                      selectedIndex: _selectedDayIdx,
+                                    ),
+                                  ),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.06),
-                                    blurRadius: 10,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    activeDay.day,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                Positioned(
+                                  top: 8,
+                                  left: _selectedDayIdx >= 4 ? 12 : null,
+                                  right: _selectedDayIdx < 4 ? 12 : null,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.96),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: const Color(0xFFE5E7EB),
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black
+                                              .withValues(alpha: 0.06),
+                                          blurRadius: 10,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          activeDay.day,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          'Commission: ${formatRs(activeDay.commission)}',
+                                          style: const TextStyle(
+                                            fontSize: 11.5,
+                                            color: Color(0xFFD97706),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Sales: ${formatRs(activeDay.sales)}',
+                                          style: const TextStyle(
+                                            fontSize: 11.5,
+                                            color: Color(0xFF166534),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    ': ${formatRs(activeDay.commission)}',
-                                    style: const TextStyle(
-                                      fontSize: 11.5,
-                                      color: Color(0xFFD97706),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    ': ${formatRs(activeDay.sales)}',
-                                    style: const TextStyle(
-                                      fontSize: 11.5,
-                                      color: Color(0xFF166534),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   ],
