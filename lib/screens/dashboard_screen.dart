@@ -144,6 +144,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
       key: const ValueKey('dashboard_list'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
+        // Quick Menu
+        _CardShell(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Quick Menu',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF111827),
+                ),
+              ),
+              const Text(
+                'فوری رسائی',
+                style: TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
+              ),
+              const SizedBox(height: 14),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: quickItems.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 14,
+                  mainAxisExtent: 98,
+                ),
+                itemBuilder: (_, idx) {
+                  final (label, urdu, icon, bg, fg, onTap) = quickItems[idx];
+                  return GestureDetector(
+                    onTap: onTap,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: bg,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Icon(icon, color: fg, size: 21),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1F2937),
+                          ),
+                        ),
+                        Text(
+                          urdu,
+                          style: const TextStyle(
+                            fontSize: 9.5,
+                            color: Color(0xFF9CA3AF),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+
         // 6 KPI Grid
         GridView.builder(
           shrinkWrap: true,
@@ -522,77 +593,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 );
               }),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-
-        // Quick Menu
-        _CardShell(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Quick Menu',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF111827),
-                ),
-              ),
-              const Text(
-                'فوری رسائی',
-                style: TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
-              ),
-              const SizedBox(height: 14),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: quickItems.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 6,
-                  mainAxisSpacing: 14,
-                  mainAxisExtent: 98,
-                ),
-                itemBuilder: (_, idx) {
-                  final (label, urdu, icon, bg, fg, onTap) = quickItems[idx];
-                  return GestureDetector(
-                    onTap: onTap,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: bg,
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Icon(icon, color: fg, size: 21),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          label,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1F2937),
-                          ),
-                        ),
-                        Text(
-                          urdu,
-                          style: const TextStyle(
-                            fontSize: 9.5,
-                            color: Color(0xFF9CA3AF),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
             ],
           ),
         ),

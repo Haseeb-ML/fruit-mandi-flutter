@@ -27,10 +27,17 @@ void main() {
     await tester.tap(find.text('لاگ ان — Login'));
     await tester.pumpAndSettle();
 
-    // 2. Dashboard renders all KPIs, charts, Quick Menu, Recent Transactions
+    // 2. Dashboard renders Quick Menu at top, KPIs, charts, Recent Transactions
     expect(find.text('Dashboard'), findsWidgets);
+    expect(find.text('Quick Menu'), findsOneWidget);
     expect(find.text("Today's Sale"), findsOneWidget);
     expect(find.text('Rs 2,54,000'), findsWidgets);
+
+    await tester.scrollUntilVisible(
+      find.text('Weekly Sales'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Weekly Sales'), findsOneWidget);
 
     await tester.scrollUntilVisible(
@@ -39,13 +46,6 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('Top Fruits'), findsOneWidget);
-
-    await tester.scrollUntilVisible(
-      find.text('Quick Menu'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.text('Quick Menu'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('Recent Transactions'),
