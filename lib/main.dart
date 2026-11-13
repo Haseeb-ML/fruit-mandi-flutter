@@ -10,31 +10,59 @@ import 'screens/arrival_screen.dart';
 import 'screens/auction_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/notifications_screen.dart';
+import 'screens/quick_tools_screens.dart';
 
 void main() {
   runApp(const FruitMandiApp());
 }
 
-class FruitMandiApp extends StatelessWidget {
+class FruitMandiApp extends StatefulWidget {
   const FruitMandiApp({super.key});
 
   @override
+  State<FruitMandiApp> createState() => _FruitMandiAppState();
+}
+
+class _FruitMandiAppState extends State<FruitMandiApp> {
+  String _language = 'en';
+
+  void _setLanguage(String lang) {
+    if (_language != lang) {
+      setState(() => _language = lang);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Al-Barkat Fruit Mandi',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF0E7C3A),
-        scaffoldBackgroundColor: const Color(0xFFF4F6F8),
+    return AppLang(
+      language: _language,
+      onChangeLanguage: _setLanguage,
+      child: MaterialApp(
+        title: 'Al-Barkat Fruit Mandi',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: const Color(0xFF0E7C3A),
+          scaffoldBackgroundColor: const Color(0xFFF4F6F8),
+        ),
+        home: MandiRoot(
+          language: _language,
+          onLanguageSync: _setLanguage,
+        ),
       ),
-      home: const MandiRoot(),
     );
   }
 }
 
 class MandiRoot extends StatefulWidget {
-  const MandiRoot({super.key});
+  final String language;
+  final ValueChanged<String> onLanguageSync;
+
+  const MandiRoot({
+    super.key,
+    required this.language,
+    required this.onLanguageSync,
+  });
 
   @override
   State<MandiRoot> createState() => _MandiRootState();
@@ -58,6 +86,16 @@ class _MandiRootState extends State<MandiRoot> {
   void initState() {
     super.initState();
     _loadPersisted();
+  }
+
+  @override
+  void didUpdateWidget(covariant MandiRoot oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.language != oldWidget.language &&
+        _settings.language != widget.language) {
+      _settings.language = widget.language;
+      _persist();
+    }
   }
 
   Future<void> _loadPersisted() async {
@@ -90,6 +128,7 @@ class _MandiRootState extends State<MandiRoot> {
         _totalExpenses = (data['totalExpenses'] as num).toInt();
       }
     });
+    widget.onLanguageSync(_settings.language);
   }
 
   void _persist() {
@@ -121,225 +160,79 @@ class _MandiRootState extends State<MandiRoot> {
   }
 
   void _openQuickTool(String tool) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        if (tool == 'payment') {
-          String buyerId = _buyers.isNotEmpty ? _buyers.first.id : '';
-          final amtCtrl = TextEditingController();
-          return StatefulBuilder(
-            builder: (ctx, setS) => Padding(
-              padding: EdgeInsets.fromLTRB(
-                20, 20, 20, MediaQuery.of(ctx).viewInsets.bottom + 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Record Payment — ادائیگی درج کریں',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 14),
-                  DropdownButtonFormField<String>(
-                    initialValue: buyerId.isEmpty ? null : buyerId,
-                    decoration: InputDecoration(
-                      labelText: 'Buyer  خریدار',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                    ),
-                    items: _buyers
-                        .map((b) => DropdownMenuItem(
-                              value: b.id,
-                              child: Text(
-                                  '${b.businessName} (${formatRs(b.outstanding)})'),
-                            ))
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) setS(() => buyerId = v);
-                    },
+    Widget page;
+    switch (tool) {
+      case 'payment':
+        page = PaymentScreen(
+          buyers: _buyers,
+          transactions: _transactions,
+          onRecordPayment: (buyerId, amt) {
+            setState(() {
+              final idx = _buyers.indexWhere((b) => b.id == buyerId);
+              if (idx != -1) {
+                _buyers[idx].outstanding =
+                    (_buyers[idx].outstanding - amt).clamp(0, 99999999);
+                _transactions.insert(
+                  0,
+                  MandiTransaction(
+                    id: 'PAY-${90 + _transactions.length}',
+                    title: _buyers[idx].businessName,
+                    subtitle: 'Payment Received',
+                    amount: amt,
+                    isDebit: false,
+                    category: 'payment',
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: amtCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Amount Received (Rs)',
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final amt = int.tryParse(amtCtrl.text.trim()) ?? 0;
-                        if (amt <= 0 || buyerId.isEmpty) return;
-                        setState(() {
-                          final idx = _buyers.indexWhere((b) => b.id == buyerId);
-                          if (idx != -1) {
-                            _buyers[idx].outstanding =
-                                (_buyers[idx].outstanding - amt)
-                                    .clamp(0, 99999999);
-                            _transactions.insert(
-                              0,
-                              MandiTransaction(
-                                id: 'PAY-${90 + _transactions.length}',
-                                title: _buyers[idx].businessName,
-                                subtitle: 'Payment Received',
-                                amount: amt,
-                                isDebit: false,
-                                category: 'payment',
-                              ),
-                            );
-                          }
-                        });
-                        _persist();
-                        Navigator.pop(ctx);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0E7C3A),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14)),
-                      ),
-                      child: const Text('Save Payment — محفوظ'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        if (tool == 'expenses') {
-          final titleCtrl = TextEditingController();
-          final amtCtrl = TextEditingController();
-          return Padding(
-            padding: EdgeInsets.fromLTRB(
-              20, 20, 20, MediaQuery.of(ctx).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Add Expense — اخراجات',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 14),
-                TextField(
-                  controller: titleCtrl,
-                  decoration: InputDecoration(
-                    labelText: 'Description (e.g. Labour / Transport)',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: amtCtrl,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Amount (Rs)',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final amt = int.tryParse(amtCtrl.text.trim()) ?? 0;
-                      if (titleCtrl.text.trim().isEmpty || amt <= 0) return;
-                      setState(() {
-                        _totalExpenses += amt;
-                        _transactions.insert(
-                          0,
-                          MandiTransaction(
-                            id: 'EXP-${35 + _transactions.length}',
-                            title: titleCtrl.text.trim(),
-                            subtitle: 'Daily Expense',
-                            amount: amt,
-                            isDebit: true,
-                            category: 'expense',
-                          ),
-                        );
-                      });
-                      _persist();
-                      Navigator.pop(ctx);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0E7C3A),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                    ),
-                    child: const Text('Save Expense — محفوظ'),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        // Ledger / Reports / Invoice / Cash Book summary sheet
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                tool.toUpperCase(),
-                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              if (tool == 'ledger')
-                ..._farmers.map((f) => ListTile(
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(f.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                      subtitle: Text(f.village),
-                      trailing: Text(
-                        f.balance > 0
-                            ? '${formatRs(f.balance)} (${f.balanceType})'
-                            : 'Settled',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: f.balanceType == 'Receivable'
-                              ? const Color(0xFFDC2626)
-                              : const Color(0xFF0E7C3A),
-                        ),
-                      ),
-                    ))
-              else
-                ..._transactions.take(6).map((t) => ListTile(
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(t.title,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                      subtitle: Text('${t.id} · ${t.subtitle}'),
-                      trailing: Text(
-                        '${t.isDebit ? '-' : '+'}${formatRs(t.amount)}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: t.isDebit
-                              ? const Color(0xFFDC2626)
-                              : const Color(0xFF0E7C3A),
-                        ),
-                      ),
-                    )),
-            ],
-          ),
+                );
+              }
+            });
+            _persist();
+          },
         );
-      },
+        break;
+      case 'ledger':
+        page = LedgerScreen(farmers: _farmers, buyers: _buyers);
+        break;
+      case 'expenses':
+        page = ExpensesScreen(
+          totalExpenses: _totalExpenses,
+          transactions: _transactions,
+          onAddExpense: (title, amt) {
+            setState(() {
+              _totalExpenses += amt;
+              _transactions.insert(
+                0,
+                MandiTransaction(
+                  id: 'EXP-${35 + _transactions.length}',
+                  title: title,
+                  subtitle: 'Daily Expense',
+                  amount: amt,
+                  isDebit: true,
+                  category: 'expense',
+                ),
+              );
+            });
+            _persist();
+          },
+        );
+        break;
+      case 'reports':
+        page = ReportsScreen(
+          auctions: _auctions,
+          arrivals: _arrivals,
+          buyers: _buyers,
+          totalExpenses: _totalExpenses,
+        );
+        break;
+      case 'invoice':
+        page = InvoiceScreen(auctions: _auctions, settings: _settings);
+        break;
+      default:
+        page = CashBookScreen(transactions: _transactions);
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => page),
     );
   }
 
@@ -672,13 +565,6 @@ class _MandiRootState extends State<MandiRoot> {
     );
     }
 
-    return AppLang(
-      language: _settings.language,
-      onChangeLanguage: (lang) {
-        setState(() => _settings.language = lang);
-        _persist();
-      },
-      child: content,
-    );
+    return content;
   }
 }

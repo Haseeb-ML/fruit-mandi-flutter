@@ -129,5 +129,80 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     expect(find.text('Fruit Mandi Arhti System v1.0'), findsOneWidget);
+
+    // 9. Test all 6 Quick Menu dedicated pages from Dashboard
+    await tester.tap(find.text('Dashboard'));
+    await tester.pumpAndSettle();
+
+    // 9a. Payment page + record payment
+    await tester.tap(find.text('Payment'));
+    await tester.pumpAndSettle();
+    expect(find.text('Payments'), findsOneWidget);
+    await tester.tap(find.text('Record Payment'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+        find.widgetWithText(TextField, 'Amount Received (Rs)'), '5000');
+    await tester.tap(find.text('Save Payment'));
+    await tester.pumpAndSettle();
+    expect(find.text('+Rs 5,000'), findsWidgets);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    // 9b. Ledger page + filter + search
+    await tester.tap(find.text('Ledger'));
+    await tester.pumpAndSettle();
+    expect(find.text('Party Ledger'), findsOneWidget);
+    await tester.tap(find.text('Farmers').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Muhammad Ali Khan'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    // 9c. Expenses page + add expense
+    await tester.tap(find.text('Expenses'));
+    await tester.pumpAndSettle();
+    expect(find.text('Expenses'), findsOneWidget);
+    await tester.tap(find.text('Add Expense'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Description (e.g. Labour / Transport)'),
+      'Ice',
+    );
+    await tester.enterText(
+        find.widgetWithText(TextField, 'Amount (Rs)'), '600');
+    await tester.tap(find.text('Save Expense'));
+    await tester.pumpAndSettle();
+    expect(find.text('Ice'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    // 9d. Reports page
+    await tester.tap(find.text('Reports'));
+    await tester.pumpAndSettle();
+    expect(find.text('Reports & Summary'), findsOneWidget);
+    expect(find.text('Total Auction Sales'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    // 9e. Invoice page
+    await tester.tap(find.text('Invoice'));
+    await tester.pumpAndSettle();
+    expect(find.text('Invoices'), findsOneWidget);
+    expect(find.text('Net Payable'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    // 9f. Cash Book page + language toggle inside pushed page
+    await tester.tap(find.text('Cash Book'));
+    await tester.pumpAndSettle();
+    expect(find.text('Cash Book'), findsOneWidget);
+    expect(find.text('Cash In'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('language_toggle_pill')));
+    await tester.pumpAndSettle();
+    expect(find.text('نقد کتاب'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('language_toggle_pill')));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
   });
 }
