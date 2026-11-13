@@ -58,6 +58,7 @@ class AuctionScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
+                    isExpanded: true,
                     initialValue: farmers.any((f) => f.name == farmerName)
                         ? farmerName
                         : null,
@@ -70,7 +71,7 @@ class AuctionScreen extends StatelessWidget {
                     items: farmers
                         .map((f) => DropdownMenuItem(
                               value: f.name,
-                              child: Text(f.name),
+                              child: Text(f.name, overflow: TextOverflow.ellipsis),
                             ))
                         .toList(),
                     onChanged: (v) {
@@ -79,6 +80,7 @@ class AuctionScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
+                    isExpanded: true,
                     initialValue: buyers.any((b) => b.businessName == buyerName)
                         ? buyerName
                         : null,
@@ -91,7 +93,7 @@ class AuctionScreen extends StatelessWidget {
                     items: buyers
                         .map((b) => DropdownMenuItem(
                               value: b.businessName,
-                              child: Text(b.businessName),
+                              child: Text(b.businessName, overflow: TextOverflow.ellipsis),
                             ))
                         .toList(),
                     onChanged: (v) {
@@ -103,6 +105,7 @@ class AuctionScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: DropdownButtonFormField<String>(
+                          isExpanded: true,
                           initialValue: fruit,
                           decoration: InputDecoration(
                             labelText: 'Fruit  پھل',
@@ -117,8 +120,10 @@ class AuctionScreen extends StatelessWidget {
                             'Apple',
                             'Guava',
                           ]
-                              .map((f) =>
-                                  DropdownMenuItem(value: f, child: Text(f)))
+                              .map((f) => DropdownMenuItem(
+                                    value: f,
+                                    child: Text(f, overflow: TextOverflow.ellipsis),
+                                  ))
                               .toList(),
                           onChanged: (v) {
                             if (v != null) setModalState(() => fruit = v);
@@ -128,6 +133,7 @@ class AuctionScreen extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: DropdownButtonFormField<String>(
+                          isExpanded: true,
                           initialValue: grade,
                           decoration: InputDecoration(
                             labelText: 'Grade',
@@ -136,8 +142,10 @@ class AuctionScreen extends StatelessWidget {
                             ),
                           ),
                           items: const ['A-Grade', 'B-Grade']
-                              .map((g) =>
-                                  DropdownMenuItem(value: g, child: Text(g)))
+                              .map((g) => DropdownMenuItem(
+                                    value: g,
+                                    child: Text(g, overflow: TextOverflow.ellipsis),
+                                  ))
                               .toList(),
                           onChanged: (v) {
                             if (v != null) setModalState(() => grade = v);
@@ -439,23 +447,31 @@ class AuctionScreen extends StatelessWidget {
                 ),
                 const Divider(height: 24, color: Color(0xFFF3F4F6)),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _MetricCol('Boxes', '${auc.boxes}', const Color(0xFF111827)),
-                    _MetricCol(
-                      'Rate / ریٹ',
-                      'Rs${formatIndianNumber(auc.rate)}',
-                      const Color(0xFF111827),
+                    Expanded(
+                      child: _MetricCol(
+                          'Boxes', '${auc.boxes}', const Color(0xFF111827)),
                     ),
-                    _MetricCol(
-                      'Commission',
-                      'Rs${formatIndianNumber(auc.commission)}',
-                      const Color(0xFFC2410C),
+                    Expanded(
+                      child: _MetricCol(
+                        'Rate / ریٹ',
+                        'Rs${formatIndianNumber(auc.rate)}',
+                        const Color(0xFF111827),
+                      ),
                     ),
-                    _MetricCol(
-                      'Net / خالص',
-                      'Rs${formatIndianNumber(auc.net)}',
-                      const Color(0xFF0E7C3A),
+                    Expanded(
+                      child: _MetricCol(
+                        'Commission',
+                        'Rs${formatIndianNumber(auc.commission)}',
+                        const Color(0xFFC2410C),
+                      ),
+                    ),
+                    Expanded(
+                      child: _MetricCol(
+                        'Net / خالص',
+                        'Rs${formatIndianNumber(auc.net)}',
+                        const Color(0xFF0E7C3A),
+                      ),
                     ),
                   ],
                 ),
@@ -479,15 +495,21 @@ class _MetricCol extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(label,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(label,
+              style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+        ),
         const SizedBox(height: 3),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 13.5,
-            fontWeight: FontWeight.bold,
-            color: color,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 13.5,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
         ),
       ],

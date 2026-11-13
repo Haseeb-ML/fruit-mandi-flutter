@@ -267,23 +267,26 @@ class _ArrivalScreenState extends State<ArrivalScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Fruit Arrival',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF111827),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Fruit Arrival',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF111827),
+                    ),
                   ),
-                ),
-                Text(
-                  '${widget.arrivals.length} entries — پھل آمد',
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-                ),
-              ],
+                  Text(
+                    '${widget.arrivals.length} entries — پھل آمد',
+                    style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _openModal(),
               icon: const Icon(Icons.add, size: 18),

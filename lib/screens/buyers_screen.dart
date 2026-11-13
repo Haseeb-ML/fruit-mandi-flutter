@@ -327,16 +327,24 @@ class _BuyersScreenState extends State<BuyersScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Outstanding / کریڈٹ',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                    const Flexible(
+                      child: Text(
+                        'Outstanding / کریڈٹ',
+                        style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    Text(
-                      '${formatRs(b.outstanding)} / ${formatIndianNumber(b.creditLimit)}',
-                      style: const TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF111827),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        '${formatRs(b.outstanding)} / ${formatIndianNumber(b.creditLimit)}',
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF111827),
+                        ),
                       ),
                     ),
                   ],
