@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback onLogin;
@@ -52,6 +53,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 constraints: const BoxConstraints(maxWidth: 380),
                 child: Column(
                   children: [
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: LanguageTogglePill(),
+                    ),
+                    const SizedBox(height: 12),
                     Container(
                       width: 68,
                       height: 68,
@@ -73,18 +79,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Fruit Mandi System',
-                      style: TextStyle(
+                    Text(
+                      AppLang.t(context, 'Fruit Mandi System', 'فروٹ منڈی سسٹم'),
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF111827),
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'فروٹ منڈی آڑھتی سسٹم',
-                      style: TextStyle(
+                    Text(
+                      AppLang.t(context, 'فروٹ منڈی آڑھتی سسٹم', 'Al-Barkat Commission Agents'),
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xFF0E7C3A),
                         fontWeight: FontWeight.w500,
@@ -108,18 +114,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Welcome Back',
-                            style: TextStyle(
+                          Text(
+                            AppLang.t(context, 'Welcome Back', 'خوش آمدید'),
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF111827),
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
-                            'خوش آمدید — اپنے اکاؤنٹ میں لاگ ان کریں',
-                            style: TextStyle(
+                          Text(
+                            AppLang.t(
+                              context,
+                              'Sign in to your account',
+                              'اپنے اکاؤنٹ میں لاگ ان کریں',
+                            ),
+                            style: const TextStyle(
                               fontSize: 12,
                               color: Color(0xFF9CA3AF),
                             ),

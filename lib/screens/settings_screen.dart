@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -74,10 +75,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         defaultCommissionPercent:
             double.tryParse(_commCtrl.text.trim()) ?? 6.0,
         marketFeePercent: double.tryParse(_feeCtrl.text.trim()) ?? 0.5,
+        language: AppLang.isUrdu(context) ? 'ur' : 'en',
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Settings saved — ترتیبات محفوظ ہو گئیں')),
+      SnackBar(
+        content: Text(AppLang.t(
+          context,
+          'Settings saved',
+          'ترتیبات محفوظ ہو گئیں',
+        )),
+      ),
     );
   }
 
@@ -129,25 +137,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isUr = AppLang.isUrdu(context);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text(
-          'Settings',
-          style: TextStyle(
+        Text(
+          isUr ? 'ترتیبات' : 'Settings',
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Color(0xFF111827),
           ),
         ),
-        const Text(
-          'ترتیبات',
-          style: TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+        Text(
+          isUr ? 'Settings' : 'ترتیبات',
+          style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
         ),
         const SizedBox(height: 14),
         _SectionCard(
-          title: 'Company Information',
-          urdu: 'کمپنی معلومات',
+          title: isUr ? 'زبان منتخب کریں' : 'Language',
+          urdu: isUr ? 'Language' : 'زبان',
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: _LangOptionButton(
+                    label: 'English',
+                    sublabel: 'انگریزی',
+                    selected: !isUr,
+                    onTap: () => AppLang.set(context, 'en'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _LangOptionButton(
+                    label: 'اردو',
+                    sublabel: 'Urdu',
+                    selected: isUr,
+                    onTap: () => AppLang.set(context, 'ur'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _SectionCard(
+          title: isUr ? 'کمپنی معلومات' : 'Company Information',
+          urdu: isUr ? 'Company Information' : 'کمپنی معلومات',
           children: [
             _SettingsField('Company Name  کمپنی کا نام', _companyCtrl),
             _SettingsField('Owner Name  مالک', _ownerCtrl),
@@ -412,6 +449,76 @@ class _SettingsField extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _LangOptionButton extends StatelessWidget {
+  final String label;
+  final String sublabel;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _LangOptionButton({
+    required this.label,
+    required this.sublabel,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFECFDF5) : const Color(0xFFF9FAFB),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: selected
+                ? const Color(0xFF0E7C3A)
+                : const Color(0xFFE5E7EB),
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              selected ? Icons.check_circle : Icons.circle_outlined,
+              size: 18,
+              color: selected
+                  ? const Color(0xFF0E7C3A)
+                  : const Color(0xFF9CA3AF),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.bold,
+                    color: selected
+                        ? const Color(0xFF0E7C3A)
+                        : const Color(0xFF111827),
+                  ),
+                ),
+                Text(
+                  sublabel,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

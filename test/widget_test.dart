@@ -54,6 +54,15 @@ void main() {
     );
     expect(find.text('Recent Transactions'), findsOneWidget);
 
+    // 2b. Toggle English -> Urdu -> English
+    await tester.tap(find.byKey(const ValueKey('language_toggle_pill')));
+    await tester.pumpAndSettle();
+    expect(find.text('ڈیش بورڈ'), findsWidgets);
+    expect(find.text('حالیہ لین دین'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('language_toggle_pill')));
+    await tester.pumpAndSettle();
+    expect(find.text('Recent Transactions'), findsOneWidget);
+
     // 3. Notifications screen
     await tester.tap(find.byIcon(Icons.notifications_none_rounded));
     await tester.pumpAndSettle();

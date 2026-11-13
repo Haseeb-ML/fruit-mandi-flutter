@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 
 class AuctionScreen extends StatelessWidget {
@@ -283,18 +284,22 @@ class AuctionScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Auction / Sale',
+                  Text(
+                    AppLang.t(context, 'Auction / Sale', 'نیلامی / فروخت'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF111827),
                     ),
                   ),
                   Text(
-                    '${auctions.length} entries — نیلامی',
+                    AppLang.t(
+                      context,
+                      '${auctions.length} entries — نیلامی',
+                      'کل ${auctions.length} اندراج — Auction',
+                    ),
                     style:
                         const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
                   ),
@@ -305,7 +310,7 @@ class AuctionScreen extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () => _openNewAuction(context),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('New Auction'),
+              label: Text(AppLang.t(context, 'New Auction', 'نئی نیلامی')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0E7C3A),
                 foregroundColor: Colors.white,

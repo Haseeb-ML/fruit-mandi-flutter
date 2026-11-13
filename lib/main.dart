@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'l10n/app_lang.dart';
 import 'models/mandi_models.dart';
 import 'screens/login_screen.dart';
 import 'screens/dashboard_screen.dart';
@@ -344,21 +345,32 @@ class _MandiRootState extends State<MandiRoot> {
 
   @override
   Widget build(BuildContext context) {
+    final isUr = _settings.language == 'ur';
+
+    Widget content;
     if (!_loggedIn) {
-      return LoginScreen(onLogin: () => setState(() => _loggedIn = true));
-    }
+      content = LoginScreen(onLogin: () => setState(() => _loggedIn = true));
+    } else {
+      final titles = isUr
+          ? const [
+              'ڈیش بورڈ',
+              'کاشتکار',
+              'خریدار',
+              'پھل آمد',
+              'نیلامی',
+              'سیٹنگز',
+            ]
+          : const [
+              'Dashboard',
+              'Farmers',
+              'Buyers',
+              'Arrival',
+              'Auction',
+              'Settings',
+            ];
+      final unreadCount = _notifications.where((n) => n.unread).length;
 
-    const titles = [
-      'Dashboard',
-      'Farmers',
-      'Buyers',
-      'Arrival',
-      'Auction',
-      'Settings',
-    ];
-    final unreadCount = _notifications.where((n) => n.unread).length;
-
-    Widget body;
+      Widget body;
     if (_showNotifications) {
       body = NotificationsScreen(
         notifications: _notifications,
@@ -542,7 +554,7 @@ class _MandiRootState extends State<MandiRoot> {
       }
     }
 
-    return Scaffold(
+      content = Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
@@ -552,7 +564,7 @@ class _MandiRootState extends State<MandiRoot> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _showNotifications ? 'App' : titles[_tabIndex],
+              _showNotifications ? (isUr ? 'اطلاعات' : 'App') : titles[_tabIndex],
               style: const TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.bold,
@@ -566,6 +578,10 @@ class _MandiRootState extends State<MandiRoot> {
           ],
         ),
         actions: [
+          const Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: LanguageTogglePill(),
+          ),
           IconButton(
             onPressed: () =>
                 setState(() => _showNotifications = !_showNotifications),
@@ -626,33 +642,43 @@ class _MandiRootState extends State<MandiRoot> {
         unselectedItemColor: const Color(0xFF9CA3AF),
         selectedFontSize: 11,
         unselectedFontSize: 11,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home_rounded),
-              label: 'Dashboard'),
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: const Icon(Icons.home_rounded),
+              label: isUr ? 'ڈیش بورڈ' : 'Dashboard'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
-              label: 'Farmers'),
+              icon: const Icon(Icons.person_outline),
+              activeIcon: const Icon(Icons.person),
+              label: isUr ? 'کاشتکار' : 'Farmers'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.groups_outlined),
-              activeIcon: Icon(Icons.groups),
-              label: 'Buyers'),
+              icon: const Icon(Icons.groups_outlined),
+              activeIcon: const Icon(Icons.groups),
+              label: isUr ? 'خریدار' : 'Buyers'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.inbox_outlined),
-              activeIcon: Icon(Icons.inbox),
-              label: 'Arrival'),
+              icon: const Icon(Icons.inbox_outlined),
+              activeIcon: const Icon(Icons.inbox),
+              label: isUr ? 'آمد' : 'Arrival'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart_outlined),
-              activeIcon: Icon(Icons.bar_chart_rounded),
-              label: 'Auction'),
+              icon: const Icon(Icons.bar_chart_outlined),
+              activeIcon: const Icon(Icons.bar_chart_rounded),
+              label: isUr ? 'نیلامی' : 'Auction'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.menu),
-              activeIcon: Icon(Icons.menu),
-              label: 'More'),
+              icon: const Icon(Icons.menu),
+              activeIcon: const Icon(Icons.menu),
+              label: isUr ? 'مزید' : 'More'),
         ],
       ),
+    );
+    }
+
+    return AppLang(
+      language: _settings.language,
+      onChangeLanguage: (lang) {
+        setState(() => _settings.language = lang);
+        _persist();
+      },
+      child: content,
     );
   }
 }

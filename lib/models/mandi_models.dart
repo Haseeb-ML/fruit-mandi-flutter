@@ -31,6 +31,7 @@ class MandiSettings {
   String address;
   double defaultCommissionPercent;
   double marketFeePercent;
+  String language;
 
   MandiSettings({
     required this.companyName,
@@ -41,6 +42,7 @@ class MandiSettings {
     required this.address,
     required this.defaultCommissionPercent,
     required this.marketFeePercent,
+    this.language = 'en',
   });
 
   factory MandiSettings.defaults() => MandiSettings(
@@ -52,6 +54,7 @@ class MandiSettings {
         address: 'Shop #12, Fruit Mandi, Lahore',
         defaultCommissionPercent: 6.0,
         marketFeePercent: 0.5,
+        language: 'en',
       );
 
   Map<String, dynamic> toJson() => {
@@ -63,6 +66,7 @@ class MandiSettings {
         'address': address,
         'defaultCommissionPercent': defaultCommissionPercent,
         'marketFeePercent': marketFeePercent,
+        'language': language,
       };
 
   factory MandiSettings.fromJson(Map<String, dynamic> json) => MandiSettings(
@@ -76,6 +80,7 @@ class MandiSettings {
             (json['defaultCommissionPercent'] as num?)?.toDouble() ?? 6.0,
         marketFeePercent:
             (json['marketFeePercent'] as num?)?.toDouble() ?? 0.5,
+        language: json['language'] == 'ur' ? 'ur' : 'en',
       );
 }
 

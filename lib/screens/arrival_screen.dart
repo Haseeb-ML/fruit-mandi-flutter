@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 import '../widgets/confirm_delete_dialog.dart';
 
@@ -271,16 +272,20 @@ class _ArrivalScreenState extends State<ArrivalScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Fruit Arrival',
-                    style: TextStyle(
+                  Text(
+                    AppLang.t(context, 'Fruit Arrival', 'پھل آمد'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF111827),
                     ),
                   ),
                   Text(
-                    '${widget.arrivals.length} entries — پھل آمد',
+                    AppLang.t(
+                      context,
+                      '${widget.arrivals.length} entries — پھل آمد',
+                      'کل ${widget.arrivals.length} اندراج — Fruit Arrival',
+                    ),
                     style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
                   ),
                 ],
@@ -290,7 +295,7 @@ class _ArrivalScreenState extends State<ArrivalScreen> {
             ElevatedButton.icon(
               onPressed: () => _openModal(),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('New Arrival'),
+              label: Text(AppLang.t(context, 'New Arrival', 'نئی آمد')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0E7C3A),
                 foregroundColor: Colors.white,

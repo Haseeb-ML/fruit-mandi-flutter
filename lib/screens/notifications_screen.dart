@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -28,16 +29,20 @@ class NotificationsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Notifications',
-                    style: TextStyle(
+                  Text(
+                    AppLang.t(context, 'Notifications', 'اطلاعات'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF111827),
                     ),
                   ),
                   Text(
-                    '$unreadCount unread — اطلاعات',
+                    AppLang.t(
+                      context,
+                      '$unreadCount unread — اطلاعات',
+                      '$unreadCount نئی — Notifications',
+                    ),
                     style:
                         const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
                   ),
@@ -47,9 +52,9 @@ class NotificationsScreen extends StatelessWidget {
             if (unreadCount > 0)
               TextButton(
                 onPressed: onMarkAllRead,
-                child: const Text(
-                  'Mark all read',
-                  style: TextStyle(
+                child: Text(
+                  AppLang.t(context, 'Mark all read', 'سب پڑھی گئیں'),
+                  style: const TextStyle(
                     color: Color(0xFF0E7C3A),
                     fontWeight: FontWeight.w600,
                   ),

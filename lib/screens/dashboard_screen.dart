@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -31,6 +32,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isUr = AppLang.isUrdu(context);
     final extraSales = widget.auctions
         .skip(3)
         .fold<int>(0, (s, a) => s + a.boxes * a.rate);
@@ -149,17 +151,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Quick Menu',
-                style: TextStyle(
+              Text(
+                isUr ? 'فوری رسائی' : 'Quick Menu',
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF111827),
                 ),
               ),
-              const Text(
-                'فوری رسائی',
-                style: TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
+              Text(
+                isUr ? 'Quick Menu' : 'فوری رسائی',
+                style: const TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
               ),
               const SizedBox(height: 14),
               GridView.builder(
@@ -189,7 +191,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          label,
+                          isUr ? urdu : label,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -199,7 +201,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         Text(
-                          urdu,
+                          isUr ? label : urdu,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 9.5,
                             color: Color(0xFF9CA3AF),
@@ -258,7 +262,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const Spacer(),
                     Text(
-                      k.label,
+                      isUr ? k.urdu : k.label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -268,7 +272,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     Text(
-                      k.urdu,
+                      isUr ? k.label : k.urdu,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -316,21 +320,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Weekly Sales',
-                          style: TextStyle(
+                          isUr ? 'ہفتہ وار فروخت' : 'Weekly Sales',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF111827),
                           ),
                         ),
                         Text(
-                          'ہفتہ وار فروخت',
-                          style: TextStyle(
+                          isUr ? 'Weekly Sales' : 'ہفتہ وار فروخت',
+                          style: const TextStyle(
                               fontSize: 11.5, color: Color(0xFF9CA3AF)),
                         ),
                       ],
@@ -343,9 +347,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       color: const Color(0xFFECFDF5),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text(
-                      'This Week',
-                      style: TextStyle(
+                    child: Text(
+                      isUr ? 'اس ہفتے' : 'This Week',
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF0E7C3A),
@@ -500,17 +504,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Top Fruits',
-                style: TextStyle(
+              Text(
+                isUr ? 'سب سے زیادہ فروخت' : 'Top Fruits',
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF111827),
                 ),
               ),
-              const Text(
-                'سب سے زیادہ فروخت',
-                style: TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
+              Text(
+                isUr ? 'Top Fruits' : 'سب سے زیادہ فروخت',
+                style: const TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
               ),
               const SizedBox(height: 14),
               ...fruitBars.map((item) {
@@ -606,23 +610,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Recent Transactions',
+                          isUr ? 'حالیہ لین دین' : 'Recent Transactions',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF111827),
                           ),
                         ),
                         Text(
-                          'حالیہ لین دین',
-                          style: TextStyle(
+                          isUr ? 'Recent Transactions' : 'حالیہ لین دین',
+                          style: const TextStyle(
                               fontSize: 11.5, color: Color(0xFF9CA3AF)),
                         ),
                       ],
@@ -630,9 +634,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   TextButton(
                     onPressed: () => widget.onOpenTool('cashbook'),
-                    child: const Text(
-                      'View All →',
-                      style: TextStyle(
+                    child: Text(
+                      isUr ? 'سب دیکھیں ←' : 'View All →',
+                      style: const TextStyle(
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF0E7C3A),

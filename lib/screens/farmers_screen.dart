@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 import '../widgets/confirm_delete_dialog.dart';
 
@@ -219,16 +220,20 @@ class _FarmersScreenState extends State<FarmersScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Farmers',
-                    style: TextStyle(
+                  Text(
+                    AppLang.t(context, 'Farmers', 'کاشتکار'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF111827),
                     ),
                   ),
                   Text(
-                    '${widget.farmers.length} total — کاشتکار',
+                    AppLang.t(
+                      context,
+                      '${widget.farmers.length} total — کاشتکار',
+                      'کل ${widget.farmers.length} — Farmers',
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style:
@@ -241,7 +246,7 @@ class _FarmersScreenState extends State<FarmersScreen> {
             ElevatedButton.icon(
               onPressed: () => _openFarmerModal(),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Farmer'),
+              label: Text(AppLang.t(context, 'Add Farmer', 'کاشتکار شامل کریں')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0E7C3A),
                 foregroundColor: Colors.white,

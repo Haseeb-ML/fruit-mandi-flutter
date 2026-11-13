@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_lang.dart';
 import '../models/mandi_models.dart';
 import '../widgets/confirm_delete_dialog.dart';
 
@@ -161,16 +162,20 @@ class _BuyersScreenState extends State<BuyersScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Buyers',
-                    style: TextStyle(
+                  Text(
+                    AppLang.t(context, 'Buyers', 'خریدار'),
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF111827),
                     ),
                   ),
                   Text(
-                    '${widget.buyers.length} total — خریدار',
+                    AppLang.t(
+                      context,
+                      '${widget.buyers.length} total — خریدار',
+                      'کل ${widget.buyers.length} — Buyers',
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style:
@@ -183,7 +188,7 @@ class _BuyersScreenState extends State<BuyersScreen> {
             ElevatedButton.icon(
               onPressed: () => _openBuyerModal(),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Buyer'),
+              label: Text(AppLang.t(context, 'Add Buyer', 'خریدار شامل کریں')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0E7C3A),
                 foregroundColor: Colors.white,
