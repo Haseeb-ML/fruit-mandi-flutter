@@ -141,6 +141,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
 
     return ListView(
+      key: const ValueKey('dashboard_list'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
         // 6 KPI Grid
@@ -152,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
-            childAspectRatio: 1.08,
+            mainAxisExtent: 198,
           ),
           itemBuilder: (_, idx) {
             final k = kpis[idx];
@@ -187,6 +188,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const Spacer(),
                     Text(
                       k.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF6B7280),
@@ -195,23 +198,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     Text(
                       k.urdu,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 10.5,
                         color: Color(0xFF9CA3AF),
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      k.value,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF111827),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        k.value,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF111827),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       k.hint,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
@@ -234,22 +245,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Weekly Sales',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF111827),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Weekly Sales',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF111827),
+                          ),
                         ),
-                      ),
-                      Text(
-                        'ہفتہ وار فروخت',
-                        style: TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
-                      ),
-                    ],
+                        Text(
+                          'ہفتہ وار فروخت',
+                          style: TextStyle(
+                              fontSize: 11.5, color: Color(0xFF9CA3AF)),
+                        ),
+                      ],
+                    ),
                   ),
                   Container(
                     padding:
@@ -515,7 +529,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisCount: 5,
                   crossAxisSpacing: 6,
                   mainAxisSpacing: 14,
-                  childAspectRatio: 0.72,
+                  mainAxisExtent: 98,
                 ),
                 itemBuilder: (_, idx) {
                   final (label, urdu, icon, bg, fg, onTap) = quickItems[idx];
@@ -568,22 +582,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Recent Transactions',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF111827),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Recent Transactions',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF111827),
+                          ),
                         ),
-                      ),
-                      Text(
-                        'حالیہ لین دین',
-                        style: TextStyle(fontSize: 11.5, color: Color(0xFF9CA3AF)),
-                      ),
-                    ],
+                        Text(
+                          'حالیہ لین دین',
+                          style: TextStyle(
+                              fontSize: 11.5, color: Color(0xFF9CA3AF)),
+                        ),
+                      ],
+                    ),
                   ),
                   TextButton(
                     onPressed: () => widget.onOpenTool('cashbook'),

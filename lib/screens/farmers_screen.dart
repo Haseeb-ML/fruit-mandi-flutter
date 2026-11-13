@@ -215,23 +215,29 @@ class _FarmersScreenState extends State<FarmersScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Farmers',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF111827),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Farmers',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF111827),
+                    ),
                   ),
-                ),
-                Text(
-                  '${widget.farmers.length} total — کاشتکار',
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-                ),
-              ],
+                  Text(
+                    '${widget.farmers.length} total — کاشتکار',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _openFarmerModal(),
               icon: const Icon(Icons.add, size: 18),

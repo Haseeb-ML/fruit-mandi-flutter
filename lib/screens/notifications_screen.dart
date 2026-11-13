@@ -18,27 +18,31 @@ class NotificationsScreen extends StatelessWidget {
     final unreadCount = notifications.where((n) => n.unread).length;
 
     return ListView(
+      key: const ValueKey('notifications_list'),
       padding: const EdgeInsets.all(16),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Notifications',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF111827),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Notifications',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF111827),
+                    ),
                   ),
-                ),
-                Text(
-                  '$unreadCount unread — اطلاعات',
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-                ),
-              ],
+                  Text(
+                    '$unreadCount unread — اطلاعات',
+                    style:
+                        const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                  ),
+                ],
+              ),
             ),
             if (unreadCount > 0)
               TextButton(
@@ -116,12 +120,16 @@ class NotificationsScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              n.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Color(0xFF111827),
+                            Expanded(
+                              child: Text(
+                                n.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Color(0xFF111827),
+                                ),
                               ),
                             ),
                             if (n.unread)

@@ -218,29 +218,43 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: Checkbox(
-                                      value: _rememberMe,
-                                      activeColor: const Color(0xFF0E7C3A),
-                                      onChanged: (v) => setState(
-                                          () => _rememberMe = v ?? true),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: Checkbox(
+                                        value: _rememberMe,
+                                        activeColor: const Color(0xFF0E7C3A),
+                                        onChanged: (v) => setState(
+                                            () => _rememberMe = v ?? true),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  const Text(
-                                    'Remember Me یاد رکھیں',
-                                    style: TextStyle(
-                                      fontSize: 11.5,
-                                      color: Color(0xFF374151),
+                                    const SizedBox(width: 6),
+                                    const Flexible(
+                                      child: Text(
+                                        'Remember Me یاد رکھیں',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 11.5,
+                                          color: Color(0xFF374151),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 4,
+                                  ),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
